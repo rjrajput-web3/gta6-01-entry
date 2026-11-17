@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Solmar Heat — an open-world crime game</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0d1b2e; font-family: "Segoe UI", Arial, sans-serif; }
+  #scene { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+  #status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .panel { background: rgba(8, 16, 28, 0.72); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 8px; color: #f2f6fa; backdrop-filter: blur(2px); }
+  #hud { position: fixed; inset: 0; pointer-events: none; display: none; }
+  #hud.on { display: block; }
+  #topbar { position: absolute; top: 12px; left: 12px; display: flex; gap: 10px; align-items: stretch; }
+  #cash { padding: 8px 14px; font-size: 22px; font-weight: 800; color: #7dff9b; letter-spacing: 0.5px; }
+  #cash small { display: block; font-size: 10px; letter-spacing: 2px; color: #cfe3d8; font-weight: 600; }
+  #healthbox { padding: 8px 12px; min-width: 150px; }
+  #healthbox .label { font-size: 10px; letter-spacing: 2px; color: #cfe3d8; font-weight: 700; }
+  #healthbar { height: 10px; background: rgba(255,255,255,0.18); border-radius: 5px; margin-top: 4px; overflow: hidden; }
+  #healthfill { height: 100%; width: 100%; background: linear-gradient(90deg, #37d67a, #a5e635); border-radius: 5px; transition: width 0.2s; }
+  #wanted { position: absolute; top: 12px; right: 12px; padding: 8px 14px; font-size: 22px; letter-spacing: 3px; color: #ffd23e; text-shadow: 0 0 8px rgba(0,0,0,0.6); }
+  #wanted .dim { color: rgba(255,255,255,0.28); text-shadow: none; }
+  #wanted .lbl { display: block; font-size: 10px; letter-spacing: 2px; color: #ffe9a8; text-align: right; }
+  #objective { position: absolute; top: 76px; left: 12px; max-width: 330px; padding: 10px 14px; }
+  #objective .mtitle { font-size: 13px; font-weight: 800; color: #ffd23e; letter-spacing: 1px; text-transform: uppercase; }
+  #objective .mtext { font-size: 14px; line-height: 1.35; margin-top: 2px; }
+  #objective .mdist { font-size: 12px; color: #9fd8ff; margin-top: 4px; font-weight: 700; }
+  #minimap { position: absolute; right: 12px; bottom: 12px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.35); box-shadow: 0 0 0 3px rgba(0,0,0,0.45); background: #101c2b; }
+  #speed { position: absolute; right: 232px; bottom: 16px; padding: 8px 14px; font-size: 20px; font-weight: 800; text-align: right; }
+  #speed small { display: block; font-size: 10px; letter-spacing: 2px; color: #cfe3d8; }
+  #ammo { position: absolute; right: 232px; bottom: 78px; padding: 6px 14px; font-size: 16px; font-weight: 800; text-align: right; }
+  #ammo small { display: block; font-size: 10px; letter-spacing: 2px; color: #cfe3d8; }
+  #hint { position: absolute; left: 12px; bottom: 12px; padding: 8px 12px; font-size: 12.5px; line-height: 1.5; color: #dbe7f0; max-width: 300px; }
+  #hint b { color: #ffd23e; }
+  #toast { position: absolute; left: 50%; top: 18%; transform: translateX(-50%); padding: 10px 18px; font-size: 17px; font-weight: 700; text-align: center; display: none; max-width: 70%; }
+  #banner { position: absolute; left: 50%; top: 32%; transform: translate(-50%, -50%); text-align: center; display: none; }
+  #banner .big { font-size: 44px; font-weight: 900; letter-spacing: 3px; color: #ffd23e; text-shadow: 0 3px 0 rgba(0,0,0,0.55), 0 0 26px rgba(0,0,0,0.6); }
+  #banner .sub { font-size: 17px; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.8); margin-top: 4px; }
+  #crosshair { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; display: none; }
+  #crosshair::before, #crosshair::after { content: ""; position: absolute; background: #fff; box-shadow: 0 0 4px #000; }
+  #crosshair::before { left: 10px; top: 0; width: 2px; height: 22px; }
+  #crosshair::after { left: 0; top: 10px; width: 22px; height: 2px; }
+  #vignette { position: fixed; inset: 0; pointer-events: none; display: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(200,0,0,0.55) 100%); }
+  .overlay { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: linear-gradient(160deg, rgba(6,18,36,0.88), rgba(20,8,32,0.82)); z-index: 10; }
+  .overlay.on { display: flex; }
+  .card { max-width: 640px; width: calc(100% - 40px); padding: 34px 38px; background: rgba(10, 22, 40, 0.92); border: 1px solid rgba(255, 210, 62, 0.35); border-radius: 14px; color: #eef4fa; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
+  .card h1 { margin: 0; font-size: 52px; letter-spacing: 2px; color: #ffd23e; line-height: 1; font-weight: 900; }
+  .card h1 span { color: #ff5d73; }
+  .card h2 { margin: 0 0 6px; font-size: 30px; color: #ffd23e; letter-spacing: 1px; }
+  .card .tag { color: #9fd8ff; font-weight: 700; letter-spacing: 3px; font-size: 12px; text-transform: uppercase; margin-top: 6px; }
+  .card p { line-height: 1.55; font-size: 15px; color: #d5e2ee; }
+  .card .controls { font-size: 13.5px; line-height: 1.9; color: #c8d8e6; columns: 2; }
+  .card .controls b { color: #ffd23e; }
+  .btnrow { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
+  button { pointer-events: auto; cursor: pointer; font-size: 16px; font-weight: 800; letter-spacing: 1px; padding: 12px 22px; border-radius: 8px; border: none; color: #14100a; background: linear-gradient(180deg, #ffd23e, #f5a623); box-shadow: 0 4px 0 #a86e00; }
+  button:active { transform: translateY(2px); box-shadow: 0 2px 0 #a86e00; }
+  button.ghost { background: rgba(255,255,255,0.12); color: #eef4fa; box-shadow: none; border: 1px solid rgba(255,255,255,0.3); }
+  .small { font-size: 12px; color: #8fa6bb; margin-top: 14px; }
+</style>
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.min.js" } }
+</script>
+</head>
+<body>
+<canvas id="scene" aria-label="Solmar Heat: an open-world crime game in the city of Solmar Bay"></canvas>
+<p id="status" role="status" aria-live="polite"></p>
+
+<div id="hud">
+  <div id="topbar">
+    <div id="cash" class="panel"><small>SOLMAR CASH</small>$<span id="cashval">0</span></div>
+    <div id="healthbox" class="panel"><div class="label">HEALTH</div><div id="healthbar"><div id="healthfill"></div></div></div>
+  </div>
+  <div id="wanted" class="panel"><span class="lbl">WANTED</span><span id="stars"></span></div>
+  <div id="objective" class="panel">
+    <div class="mtitle" id="mtitle">Free roam</div>
+    <div class="mtext" id="mtext">Explore Solmar Bay. Steal a car with E, or talk to Mara Voss to start a job.</div>
+    <div class="mdist" id="mdist"></div>
+  </div>
+  <canvas id="minimap" width="200" height="200"></canvas>
+  <div id="speed" class="panel"><small>SPEED</small><span id="speedval">0</span> mph</div>
+  <div id="ammo" class="panel"><small>AMMO</small><span id="ammoval">24</span></div>
+  <div id="hint" class="panel"><b>WASD</b> move / drive &nbsp; <b>Mouse</b> drag camera<br><b>E</b> steal car &nbsp; <b>F / Click</b> fight &nbsp; <b>Space</b> brake<br><b>Shift</b> sprint &nbsp; <b>Esc</b> pause &amp; save &nbsp; <b>M</b> mute</div>
+  <div id="toast" class="panel"></div>
+  <div id="banner"><div class="big" id="bannerbig"></div><div class="sub" id="bannersub"></div></div>
+  <div id="crosshair"></div>
+</div>
+<div id="vignette"></div>
+
+<div id="menu" class="overlay on">
+  <div class="card">
+    <h1>SOLMAR <span>HEAT</span></h1>
+    <div class="tag">An open-world crime game &middot; Solmar Bay</div>
+    <p>You are <b>Jax Marlowe</b>, a wheelman fresh off the docks. The fixer
+    <b>Mara Voss</b> has six jobs for you — getaway cars, package runs, repo work
+    and one big marina score. The Solmar Bay police are watching. Steal cars,
+    lose the tail, get paid, and do not get busted.</p>
+    <div class="controls">
+      <div><b>W A S D</b> — move / drive</div>
+      <div><b>Mouse drag</b> — camera</div>
+      <div><b>E</b> — steal / enter car</div>
+      <div><b>F / Click</b> — punch / shoot</div>
+      <div><b>Space</b> — handbrake</div>
+      <div><b>Shift</b> — sprint / boost</div>
+      <div><b>Esc</b> — pause &amp; save</div>
+      <div><b>M</b> — mute sound</div>
+    </div>
+    <div class="btnrow">
+      <button id="btn-start">START ENGINE</button>
+      <button id="btn-continue" class="ghost">CONTINUE</button>
+    </div>
+    <div class="small">Solmar Bay is a fictional city. All characters, cars, places and music are original. Progress saves in this browser.</div>
+  </div>
+</div>
+
+<div id="pause" class="overlay">
+  <div class="card">
+    <h2>PAUSED</h2>
+    <p id="pause-stats">Take a breath, Jax. The city waits.</p>
+    <div class="btnrow">
+      <button id="btn-resume">RESUME</button>
+      <button id="btn-save" class="ghost">SAVE GAME</button>
+      <button id="btn-restart" class="ghost">RESTART DAY</button>
+    </div>
+    <div class="small" id="save-note">Saving stores your cash, missions and position in this browser.</div>
+  </div>
+</div>
+
+<div id="end" class="overlay">
+  <div class="card">
+    <h2 id="end-title">WASTED</h2>
+    <p id="end-text">Solmar Bay got the better of you this time.</p>
+    <div class="btnrow">
+      <button id="btn-retry">TRY AGAIN</button>
+      <button id="btn-menu" class="ghost">MAIN MENU</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
