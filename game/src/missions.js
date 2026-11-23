@@ -1,4 +1,4 @@
-// Mara Voss's six jobs: the story of Solmar Heat. Each mission is a small state
+// Mara Voss's nine jobs: the story of Solmar Heat. Each mission is a small state
 // machine of steps — go somewhere, do something, get paid — with a glowing
 // beacon in the world, a blip on the minimap, and an objective line on the HUD.
 import * as THREE from 'three';
@@ -64,6 +64,36 @@ export const MISSIONS = [
       { type: 'reach', at: 'hideout', radius: 10, wanted: 3, text: 'Escape to the hideout in the hills. The police will be all over you.' },
     ],
   },
+  {
+    id: 'marina-to-hills',
+    title: '7 — Marina to Hills Run',
+    brief: 'A buyer in the hills is paying cash for what is sitting at the marina. Pick it up on foot, then get it across the city against the clock.',
+    reward: 2000,
+    steps: [
+      { type: 'reach', at: 'marina', radius: 6, onFoot: true, text: 'Get to the marina on foot and pick up the buyer\'s package.' },
+      { type: 'reach', at: 'hills', radius: 12, timer: 110, text: 'Deliver the package to the buyer in the hills before the timer runs out.' },
+    ],
+  },
+  {
+    id: 'roadblock-run',
+    title: '8 — Roadblock Run',
+    brief: 'Dispatch is setting roadblocks across Solmar Bay tonight. Draw four stars, punch through the heat, and reach the hideout.',
+    reward: 2500,
+    steps: [
+      { type: 'wanted', min: 4, text: 'Draw the whole department out — get a 4-star wanted level.' },
+      { type: 'reach', at: 'hideout', radius: 12, wanted: 4, text: 'Run the roadblocks and escape to the hideout in the hills.' },
+    ],
+  },
+  {
+    id: 'the-big-score',
+    title: '9 — The Big Score',
+    brief: 'The finale: an armored van is loading vault cash at the docks. Take the cash, then run it to Mara\'s garage with four stars on you.',
+    reward: 5000,
+    steps: [
+      { type: 'reach', at: 'docks', radius: 8, onFoot: true, text: 'Get to the armored van at the docks on foot and grab the vault cash.' },
+      { type: 'reach', at: 'garage', radius: 10, timer: 120, wanted: 4, text: 'Run the vault cash to Mara\'s garage. Every patrol car in Solmar Bay is coming.' },
+    ],
+  },
 ];
 
 export function createMissions() {
@@ -110,9 +140,9 @@ function setupStep(missions, world) {
     missions.timer = step.timer;
     missions.timerMax = step.timer;
   }
-  if (step.type === 'wanted' && world.police.level < 2) {
-    // Give the player a head start on the trouble: two stars, on the house.
-    world.police.level = 2;
+  if (step.type === 'wanted' && world.police.level < step.min) {
+    // Give the player a head start on the trouble: the stars, on the house.
+    world.police.level = step.min;
     world.police.heat = 0;
   }
   if (step.type === 'reach' && step.wanted) {

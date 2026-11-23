@@ -9,7 +9,7 @@ import { createPlayer, updatePlayerOnFoot, nearestStealableCar } from './player.
 import { createTraffic, updateTraffic, drivePlayerCar, makeCar } from './vehicles.js';
 import { createPedestrians, updatePedestrians } from './pedestrians.js';
 import { createPolice, updatePolice, addWanted } from './police.js';
-import { createMissions, startMission, updateMissions, currentStep, stepTargetPos } from './missions.js';
+import { createMissions, startMission, updateMissions, currentStep, stepTargetPos, MISSIONS } from './missions.js';
 import { createCombat, shoot, punch, updateCombat } from './combat.js';
 import { createEffects } from './effects.js';
 import { createAudio } from './audio.js';
@@ -49,8 +49,8 @@ export function createWorld(canvas, seed, opts) {
   const audio = createAudio();
   const hud = createHud();
   const player = createPlayer(scene, city.landmarks.spawn);
-  const traffic = createTraffic(scene, rng, city.roadLines, city.colliders, 16);
-  const peds = createPedestrians(scene, rng, city.roadLines, 26);
+  const traffic = createTraffic(scene, rng, city.roadLines, city.colliders, 30);
+  const peds = createPedestrians(scene, rng, city.roadLines, 48);
   const police = createPolice(scene);
   const missions = createMissions();
   const combat = createCombat();
@@ -297,7 +297,7 @@ export function updateWorld(world, input, dt, pressedSet) {
   updateMissions(world.missions, world, dt);
 
   // Start the next job automatically when the player is free-roaming near Mara.
-  if (!world.missions.active && world.missions.index < 6 && !world.over) {
+  if (!world.missions.active && world.missions.index < MISSIONS.length && !world.over) {
     const marker = world.city.landmarks.spawn;
     const d = Math.hypot(player.pos.x - marker.x, player.pos.z - marker.z);
     if (d < 6) startMission(world.missions, world);

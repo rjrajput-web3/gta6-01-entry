@@ -11,8 +11,86 @@ sounds. Nothing is taken from Rockstar Games or any other commercial game.
 
 You play Jax Marlowe, a driver fresh out of the Solmar Bay docks, taking jobs from
 the fixer Mara Voss while the Solmar Bay Police Department watches every move.
-Explore the city on foot or behind the wheel, steal cars, outrun the law, take on
-six story missions, fight back when cornered, and build your cash and reputation.
+
+## The open world, on foot and by car
+
+Solmar Bay is a full procedural city — nine districts of towers, palms and
+street lights: downtown, the marina, the beach strip, the market quarter, the
+docks and the hills, with a beach and ocean to the south and a working day sky.
+It is alive before you touch a single mission:
+
+- **Traffic** — 30 cars cruise the road grid on their own: sedans, taxis,
+  sports cars, vans and trucks that turn at intersections, slow for the car
+  ahead and scatter when you block the road, plus parked cars on the quieter
+  streets waiting to be stolen.
+- **Pedestrians** — 48 locals stroll the sidewalks, cross the avenues, and
+  run when a car mounts the kerb or a shot goes off.
+- **On foot and behind the wheel** — walk the whole city, steal any car with
+  one key, and drive it with arcade handling, boost, handbrake slides, horns
+  and damage. Every district is reachable both ways.
+
+## Wanted level and the police
+
+Crime is watched. Steal a car, hit a pedestrian or open fire and your wanted
+level climbs from one to five stars, and the Solmar Bay PD answers with a
+named response system:
+
+- **Patrol pursuit** — patrol cars spawn across the city and hunt you: they
+  chase, cut corners, ram your car to damage it, and box you in. On foot, a
+  patrol car that stays on top of you busts you.
+- **Roadblocks** — at four and five stars, dispatch sets a roadblock on the
+  road ahead of you: two patrol cars parked across the lane, lights flashing,
+  an officer standing at each car. Hit it at speed and it wrecks your momentum
+  and your car. Outrun it, loop around it, or lose the heat and watch it lift.
+- **The cool-off** — break line of sight and stay clean and the stars fall,
+  one by one, until the patrols give up and drive away. Get busted or wasted
+  and you pay for it in cash.
+
+## Nine story missions
+
+Mara Voss has nine jobs that tell Jax's story, each with its own brief,
+objective marker and beacon, timers where the job demands speed, and a cash
+payout that autosaves your progress:
+
+1. **First Wheels** — steal a getaway car and deliver it to the marina.
+2. **Package Run** — pick up a package at the market and beat the clock to the docks.
+3. **Lose the Tail** — draw two stars of police attention, then lose them completely.
+4. **Repo Job** — take the red sports car from the beach lot to Mara's garage.
+5. **Street Heat** — disable three patrol cars, by gunfire or by ramming.
+6. **The Marina Score** — grab the marina van's cash and escape to the hills hideout.
+7. **Marina to Hills Run** — a timed cross-city delivery from the marina to a buyer in the hills.
+8. **Roadblock Run** — draw four stars and run the roadblocks to the hideout.
+9. **The Big Score** — take the armored van's vault cash at the docks and run it to the garage under a four-star response, for the biggest payout of the story.
+
+## Depth and systems
+
+- **Combat** — fists and a pistol with muzzle flashes, hit reactions and
+  patrol cars you can shoot out or ram out; pedestrians and police react.
+- **Car damage** — every car has health: crashes, rams and roadblocks smoke,
+  wreck and finally kill it, and a wrecked car throws you out hurt.
+- **Cash economy** — mission payouts, cash pickups hidden around the city
+  (each one also tops up your ammo), and real losses when you are busted or
+  wasted.
+- **Save and continue** — pause-menu saving to the browser (cash, missions,
+  position, pickups), a title screen with the story, and a continue option
+  that picks the city up where you left it.
+
+## HUD with minimap
+
+The screen always tells the story at a glance: cash, health bar, wanted
+stars, speed and ammo, the current mission objective with its distance or
+countdown timer, toasts and job banners — and a live circular minimap that
+plots the road grid, the ocean, you, traffic, police, cash pickups and the
+mission beacon, so a chase reads on the map exactly as it plays on the street.
+
+## Look and originality
+
+Solmar Bay is its own place: a warm, sun-soaked modern coastal city in late
+afternoon light, built procedurally from a single seed — canvas-generated
+building facades with lit windows, palms and lamps on every block, beach
+umbrellas on the sand, a marina pier, and district signs to navigate by. The
+sound is fully synthesized WebAudio — engine, sirens, gunshots, pickups and
+mission jingles — with no audio files and no borrowed assets.
 
 ## How to play
 
@@ -40,40 +118,25 @@ under `game/`.
 | Esc / P | Pause menu (save, resume, restart) |
 | M | Mute sound |
 
-## What is in the game
-
-- **A city to explore** — nine districts of Solmar Bay: downtown towers, the
-  marina, the beach strip, the market quarter, the docks and the hills, with
-  traffic, pedestrians, palms, street lights and a working day sky.
-- **Cars to steal and drive** — traffic cars, parked cars and mission cars, each
-  with arcade handling, damage, smoke and a horn.
-- **A wanted system** — one to five stars. Steal a car, hit a pedestrian or shoot
-  and the Solmar Bay police respond: patrol cars chase, ram and try to bust you.
-  Lose them to cool off, or get busted or wasted and pay the price.
-- **Missions and a story** — six story jobs for Mara Voss: a first getaway car, a
-  package run against the clock, losing a tail, a repo job, a street chase and the
-  big marina score, plus cash pickups scattered around the city.
-- **Combat** — fists and a pistol, muzzle flashes, hit reactions and police cars
-  you can disable.
-- **HUD with minimap** — cash, health, wanted stars, speed, mission objective
-  with distance, and a live minimap showing you, traffic, police and the mission
-  marker.
-- **Start screen and save** — a title screen with the story, a pause menu, and
-  saving to the browser (cash, missions, position) so you can continue later.
-- **Sound** — fully synthesized WebAudio: engine, sirens, gunshots, pickups and
-  mission jingles. No audio files.
-
 ## Screenshots
 
 The four images in `screenshots/` are real renders of the game running in a
-browser: a police chase, the city on foot, driving the beach strip, and a mission
-in progress.
+browser, staged from live game states: a five-star chase with two patrol cars
+on the player's tail and a police roadblock across the avenue ahead; downtown
+on foot, crowded with pedestrians and traffic; a drive down the beach strip
+past beach crowds and oncoming traffic; and a story mission in progress, on
+foot toward the objective beacon with a patrol car rolling in.
 
 ## Tech
 
 - [three.js](https://threejs.org/) (vendored as `game/vendor/three.module.min.js`)
 - Plain ES modules, no build step, no network requests
 - Procedural city, canvas-generated textures, WebAudio synthesis
+- Game structure: one module per system in `game/src/` — `world.js` owns the
+  scene and steps every system together; `city.js`, `vehicles.js`,
+  `pedestrians.js`, `police.js` (wanted levels, pursuit and roadblocks),
+  `missions.js` (the nine jobs), `combat.js`, `hud.js` (HUD and minimap) and
+  `shots.js` (the staged screenshot scenes) each do one job.
 
 ## Entry
 

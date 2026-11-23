@@ -94,7 +94,7 @@ function runGame() {
   document.getElementById('btn-save').addEventListener('click', () => {
     const ok = saveGame(world);
     document.getElementById('save-note').textContent = ok
-      ? `Saved. Cash $${world.cash.toLocaleString('en-US')}, job ${world.missions.index + 1} of 6.`
+      ? `Saved. Cash $${world.cash.toLocaleString('en-US')}, job ${world.missions.index + 1} of 9.`
       : 'Save failed — this browser is blocking storage.';
     world.audio.click();
   });
@@ -119,7 +119,7 @@ function runGame() {
   function pauseGame() {
     if (screen !== 'play') return;
     screen = 'paused';
-    hud.setPauseStats(`Cash $${world.cash.toLocaleString('en-US')} · Job ${Math.min(world.missions.index + 1, 6)} of 6 · ${Math.floor(world.playedSeconds / 60)} min in the city.`);
+    hud.setPauseStats(`Cash $${world.cash.toLocaleString('en-US')} · Job ${Math.min(world.missions.index + 1, 9)} of 9 · ${Math.floor(world.playedSeconds / 60)} min in the city.`);
     hud.showPause();
     announce('Paused.');
   }
