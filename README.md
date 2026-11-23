@@ -126,6 +126,7 @@ on the player's tail and a police roadblock across the avenue ahead; downtown
 on foot, crowded with pedestrians and traffic; a drive down the beach strip
 past beach crowds and oncoming traffic; and a story mission in progress, on
 foot toward the objective beacon with a patrol car rolling in.
+All four images are real renders captured from the running game at 1280x720.
 
 ## Tech
 
